@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Slider - Default functionality</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://unpkg.com/imask"></script>
+  <script>
+  $( function() {
+    function total() {
+      var total_sum = 0;
+      var year = parseInt($('input[type=radio][name=input-with-radio]:checked').attr('value'));
+
+      $(".input-with-slider").each(function(index) {
+        total_sum += parseInt($(this).val())*$(this).data('percent')/100;
+      });
+
+      $("#total").html(parseInt(total_sum)*year);
+    }
+
+    $(".input-with-slider").each(function(index) {
+      var slider = $("<div/>");
+      var min_value = $(this).data('min');
+      var max_value = $(this).data('max');
+      var mask = new IMask(this, {mask: max_value.toString().replace(/[0-9]/g, "0")});
+
+      slider.attr("class", "slider-input");
+
+      $(this).after(slider);
+
+      slider.slider({
+        slide: function( event, ui ) {
+          var val = parseInt(min_value+(ui.value/100)*(max_value-min_value));
+          mask.value = val.toString();
+          total();
+        }
+      });
+      
+      var percent = parseInt((parseInt($(this).val()) + min_value)*100/max_value);
+      slider.slider( "value", percent );
+
+      $(this).keyup(function() {
+        var percent = parseInt((parseInt($(this).val()) + min_value)*100/max_value);
+        slider.slider( "value", percent );
+        total();
+      });
+    });
+
+    $('input[type=radio][name=input-with-radio]').change(function() {
+      total();
+    });
+      total();
+  } );
+  </script>
+</head>
+<body>
+<style type="text/css">
+  .input-with-slider {
+      padding: 10px;
+      display: block;
+      border: 1px solid #297036;
+      width: 100%;
+      font-size: 20px;
+      box-sizing: border-box;
+  }
+  .ui-widget.ui-widget-content {
+    width: 100%;
+    top: -5px;
+    border: none;
+    background-color: #ffffff00;
+  }
+  .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    border: none;
+    background: #297036;
+    font-weight: normal;
+    color: #454545;
+    border-radius: 30px;
+    width: 18px;
+    height: 18px;
+}
+@keyframes click-wave {
+  0% {
+    height: 40px;
+    width: 40px;
+    opacity: 0.35;
+    position: relative;
+  }
+  100% {
+    height: 200px;
+    width: 200px;
+    margin-left: -80px;
+    margin-top: -80px;
+    opacity: 0;
+  }
+}
+
+.option-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 13.33333px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 30px;
+  width: 30px;
+  transition: all 0.15s ease-out 0s;
+  background: #cbd1d8;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 0.5rem;
+  outline: none;
+  position: relative;
+  z-index: 1000;
+}
+.option-input:hover {
+  background: #9faab7;
+}
+.option-input:checked {
+  background: #297036;
+}
+/*.option-input:checked::before {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  content: '✔';
+  display: inline-block;
+  font-size: 21.66667px;
+  text-align: center;
+  line-height: 32px;
+}*/
+.option-input:checked::after {
+  -webkit-animation: click-wave 0.65s;
+  -moz-animation: click-wave 0.65s;
+  animation: click-wave 0.65s;
+  background: #40e0d0;
+  content: '';
+  display: block;
+  position: relative;
+  z-index: 100;
+}
+.option-input.radio {
+  border-radius: 50%;
+}
+.option-input.radio::after {
+  border-radius: 50%;
+}
+</style>
+<div class="f" style="display: flex;">
+  <div class="" style="width: 50%;">
+    <div>
+      <label>Магазины</label>
+      <input class="input-with-slider" type="text" value="950000" data-min="1" data-max="4999999" data-percent="1" />
+    </div>
+
+    <div>
+      <label>АЗС</label>
+      <input class="input-with-slider" type="text" value="1350000" data-min="1" data-max="4999999" data-percent="3" />
+    </div>
+
+    <div>
+      <label>Кафе рестораны</label>
+      <input class="input-with-slider" type="text" value="3600000" data-min="1" data-max="19999999" data-percent="3" />
+    </div>
+
+    <div>
+      <label>Бронирование отелей</label>
+      <input class="input-with-slider" type="text" value="2400000" data-min="1" data-max="19999999" data-percent="7" />
+    </div>
+
+    <div>
+      <label>Покупки золота, бриллиантов</label>
+      <input class="input-with-slider" type="text" value="9900000" data-min="1" data-max="29999999" data-percent="5" />
+    </div>
+
+    <div>
+      <label>Рекомендации программ ТК АПК</label>
+      <input class="input-with-slider" type="text" value="50" data-min="1" data-max="1000" data-percent="500000" />
+    </div>
+
+    <div>
+      <label>Бонус от фермеров</label>
+      <input class="input-with-slider" type="text" value="31000" data-min="1" data-max="499999" data-percent="100" />
+    </div>
+  </div>
+
+  <div class="" style="width: 50%;">
+    <div>
+      <label>
+        <input type="radio" class="option-input radio" name="input-with-radio" checked value="1" />
+        1 год
+      </label>
+      <label>
+        <input type="radio" class="option-input radio" name="input-with-radio" value="2" />
+        2 года
+      </label>
+      <label>
+        <input type="radio" class="option-input radio" name="input-with-radio" value="3" />
+        3 года
+      </label>
+    </div>
+    <div id="total">0</div>
+  </div>
+</div>
+
+</body>
+</html>
